@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User Registration </title>
+	<link rel = "stylesheet" type = "text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+
+<div>
+<?php
+	if(isset($_POST['create'])){
+		echo 'User Submitted';
+	}
+?>
+</div>
+
+
+<div>
+	<form action = "registration.php" method= "post">
+		<div class = "container">
+			<div class = 'row'>
+				<div class = 'col-sm-4'>
+					<h1>Registration</h1>
+					<p>Fill up the form with correct vlues</p>
+					<hr class = 'mb-3'>
+		
+					<label for = 'username'><b> Username : </b></label>
+					<input id='username' class = 'form-control' type = "text" name = "username" required>
+		
+					<label for = 'email'><b> Email Address: </b></label>
+					<input id='email' class = 'form-control' type = "email" name = "email" required>
+		
+					<label for = 'password'><b> Password : </b></label>
+					<input id='password' title="Must contain at least one number and one uppercase and one symbol'#$@...', and at least 8 or more characters" class = 'form-control' type = "password" name = "password" required>
+		
+					<label for = 'rep-password'><b>Repeat Password : </b> </label>
+					<input id='rep-password' class = 'form-control' type = "password" name = "rep-password" required>
+		
+					<hr class = 'mb-3'>
+					<input id='submit' class = 'btn btn-success' type = "submit" name = "create" value = "Sing up">
+					
+				</div>
+			</div>
+		</div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script type = "text/javascript">
+	$(function(){
+		$('#submit').click(function(e){
+		
+		var valid = this.form.checkValidity();
+		
+		if(valid){
+			var passvalid = /^(?=.*\d)(?=.*[@$!%*#?&_-])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+			var username = $('#username').val();
+			var email = $('#email').val();
+			var password = $('#password').val();
+			if( passvalid.test(password)){
+			
+			
+													
+			var reppassword = $('#rep-password').val();	
+			
+			e.preventDefault();
+			
+			if(password == reppassword){
+			
+			$.ajax({
+				type:'POST',
+				url : 'registration.php',
+				data:{username : username, email : email, password : password, reppassword : reppassword},
+				success: function(data){
+					Swal.fire({
+						icon: 'success',
+						title: 'Success!',
+						text : 'User registered successfully',
+						type : 'success'
+					})
+					window.location.href = 'http://localhost/dashboard/web/user/login.html';
+				},
+				error: function(data){
+					Swal.fire({
+						title: 'ERROR',
+						text : 'Some errors have accured. Try again!',
+						type : 'error'
+					})
+				}
+			});
+			}
+			else{
+				Swal.fire({
+						icon: 'error',
+						title: 'Ops...',
+						text : 'Passwords are different. Try again!',
+						type : 'error'
+					})
+			}
+		}
+		else{
+		Swal.fire({
+						icon: 'error',
+						title: 'Ops...',
+						text : 'Password must be at least 8 characters,has at least UpperCase letter and at least a special character. Try again!',
+						type : 'error'
+					})
+					return false;
+		}
+		}
+		else{
+		Swal.fire({
+				icon: 'error',
+				title: 'Ops...',
+				text : 'Fill up the form with correct values. Try again!',
+				type : 'error'
+			})
+		}
+	});
+	
+})
+</script>
+</body>
+</html>
